@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ftcdevcommon_1_0:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ftcdevcommon_1_0_jar</output-path>
+    <root id="archive" name="ftcdevcommon.jar">
+      <element id="module-output" name="ftcdevcommon" />
+    </root>
+  </artifact>
+</component>
