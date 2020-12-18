@@ -11,12 +11,13 @@ import java.util.concurrent.ExecutionException;
 
 public class CommonUtils {
 
-    //**TODO Requires minSdkVersion 26
+    //**TODO Requires Android minSdkVersion 26
     //public static String getLocalDateTimeStamp(LocalDateTime pLocalDateTime) {
     //    return pLocalDateTime.format(DateTimeFormatter.ofPattern("MMddHHmm'_'ssSSS"));
     //}
 
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmm'_'ssSSS");
+
     public static String getDateTimeStamp(Date pDate) {
         return dateFormat.format(pDate);
     }
@@ -39,7 +40,7 @@ public class CommonUtils {
     public static <R> R getFutureCompletion(CompletableFuture<R> pCompletable) throws InterruptedException, IOException {
         R retVal = null;
         try {
-            pCompletable.get(); // allows catch clause for CompletionException below (no compiler error)
+            retVal = pCompletable.get(); // allows catch clause for CompletionException below (no compiler error)
         }
 
         // Based on --
@@ -61,7 +62,8 @@ public class CommonUtils {
         }
 
         if (t instanceof CancellationException) {
-          // Benign in our environment - part of a normal shutdown
+            // Benign in our environment - part of a normal shutdown
+            return;
         }
 
         if (t instanceof InterruptedException) {

@@ -36,7 +36,7 @@ public class XPathAccess {
 		return processingContext;
 	}
 
-	// Tests a child element of a command element for the XML attrubute "invert_for_red".
+	// Tests a child element of a command element for the XML attribute "invert_for_red".
 	// This is a convenience for BLUE and RED choreographies that are mirror images of
 	// each other.
 	//
@@ -229,14 +229,14 @@ public class XPathAccess {
 		return itemDouble;
 	}
 	
-	public boolean getBooleanFromText(String pBooltext, String pNodeName) {
-		if (pBooltext.isEmpty())
+	public boolean getBooleanFromText(String pBoolText, String pNodeName) {
+		if (pBoolText.isEmpty())
 			throw new AutonomousRobotException(TAG, "Requested item " + pNodeName + " does not exist in " + processingContext);
 
-		if (pBooltext.equals("true"))
+		if (pBoolText.equals("true"))
 			return true;
-		if (pBooltext.equals("false"))
+		if (pBoolText.equals("false"))
 			return false;
-		throw new AutonomousRobotException(TAG, "Value in " + pNodeName + ": " + pBooltext + " is not a boolean");
+		throw new AutonomousRobotException(TAG, "Value in " + pNodeName + ": " + pBoolText + " is not a boolean");
 	}
 }

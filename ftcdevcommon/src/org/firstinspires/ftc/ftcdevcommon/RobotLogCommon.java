@@ -83,7 +83,7 @@ public class RobotLogCommon {
 
             // Start a CompletableFuture for writing out the log.
             logWriter = new LogWriter();
-            logWriterFuture = CompletableFuture.supplyAsync(() -> logWriter.call());
+            logWriterFuture = CompletableFuture.supplyAsync(logWriter::call);
 
         } catch (Exception exception) {
             throw new AutonomousRobotException(TAG, "Error in initialization of logging: " + exception.getMessage());
@@ -103,20 +103,10 @@ public class RobotLogCommon {
     public static boolean logThisLevel(final String pLevel) {
         Level levelToCheck;
         switch (pLevel) {
-            case "d": {
-                levelToCheck = Level.FINE;
-                break;
-            }
-            case "v": {
-                levelToCheck = Level.FINER;
-                break;
-            }
-            case "vv": {
-                levelToCheck = Level.FINEST;
-                break;
-            }
-            default:
-                throw new AutonomousRobotException(TAG, "Invalid debug log option");
+            case "d" -> levelToCheck = Level.FINE;
+            case "v" -> levelToCheck = Level.FINER;
+            case "vv" -> levelToCheck = Level.FINEST;
+            default -> throw new AutonomousRobotException(TAG, "Invalid debug log option");
         }
 
         return logger.isLoggable(levelToCheck);
@@ -194,7 +184,6 @@ public class RobotLogCommon {
         public Void call() {
 
             ArrayList<Pair<Level, String>> drain = new ArrayList<>();
-            Pair<Level, String> logQueueEntry;
             boolean closeNow = false;
             while (true) {
                 try {
