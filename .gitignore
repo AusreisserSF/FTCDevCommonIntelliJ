@@ -11,6 +11,5 @@ log/
 target/
 
 # Generated files
-Files/logs/
 # keep out/artifacts - which is where jars are stored
 out/production/
