@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.ftcdevcommon;
 
-import org.firstinspires.ftc.ftcdevcommon.intellij.WorkingDirectory;
-
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -26,27 +24,28 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RobotLogCommon {
 
     private static final String TAG = "RobotCommonLog";
-    public static final String logDir = "/logs/";
 
     private static final Level DEFAULT_LEVEL = Level.FINE;
-    private static final Logger logger;
-    private static final FileHandler fileHandler;
+    private static Logger logger;
+    private static FileHandler fileHandler;
 
-    private static final LogWriter logWriter;
-    private static final CompletableFuture<Void> logWriterFuture;
+    private static CompletableFuture<Void> logWriterFuture;
     private static final Lock logQueueLock = new ReentrantLock();
 
     private static final LinkedBlockingQueue<Pair<Level, String>> logEntryQueue = new LinkedBlockingQueue<>();
+    private static boolean loggerInitialized = false;
     private static boolean closeLogWriter = false;
 
     // Wanted to use a MemoryHandler to log to a buffer but found out here --
     // https://chromium.googlesource.com/android_tools/+/refs/heads/master/sdk/sources/android-25/java/util/logging/MemoryHandler.java
     // that push() is synchronous with the linked FileHandler. So we'll use a
     // BlockingQueue instead.
-    static {
+    public static void initialize(String pLogPath) {
+        if (loggerInitialized)
+            return;
+
         try {
             logger = Logger.getLogger(RobotLogCommon.class.getName());
-           final String logPath = WorkingDirectory.getWorkingDirectory() + logDir;
 
             // System.setProperty("java.util.logging.config.file",
             // "Files/logging.properties");
@@ -59,7 +58,7 @@ public class RobotLogCommon {
             // limit, the file count, and the append flag - only the append flag is
             // honored. A single log file is created that grows indefinitely. But if I
             // use the next line, everything works.
-            fileHandler = new FileHandler(logPath + "FTCRobotLog.txt", 1000000, 5, true);
+            fileHandler = new FileHandler(pLogPath + "FTCRobotLog.txt", 1000000, 5, true);
             logger.setUseParentHandlers(false);
             fileHandler.setFormatter(new SimpleFormatter() {
                 // original private static final String format = "[%1$tF %1$tT] [%2$-7s] %3$s
@@ -82,8 +81,10 @@ public class RobotLogCommon {
             logger.setLevel(DEFAULT_LEVEL);
 
             // Start a CompletableFuture for writing out the log.
-            logWriter = new LogWriter();
+            LogWriter logWriter = new LogWriter();
             logWriterFuture = CompletableFuture.supplyAsync(logWriter::call);
+
+            loggerInitialized = true;
 
         } catch (Exception exception) {
             throw new AutonomousRobotException(TAG, "Error in initialization of logging: " + exception.getMessage());
@@ -143,7 +144,11 @@ public class RobotLogCommon {
     // collections
     // when the associated exception is thrown."
     private static void enqueueLogEntry(Level pLevel, String pLogString) {
-        //logger.info("Enqueueing log entry");
+        if (!loggerInitialized) {
+           System.out.println(pLogString); // desperation time
+           return;
+        }
+
         logQueueLock.lock();
         try {
             logEntryQueue.add(Pair.create(pLevel, pLogString));
@@ -153,6 +158,10 @@ public class RobotLogCommon {
     }
 
     public static void closeLog() {
+        if (!loggerInitialized) {
+            System.out.println("can't close a log that's not open"); // desperation time
+            return;
+        }
 
         // See comments above at enqueueLogEntry.
         logQueueLock.lock();
@@ -182,7 +191,6 @@ public class RobotLogCommon {
     private static class LogWriter implements Callable<Void> {
 
         public Void call() {
-
             ArrayList<Pair<Level, String>> drain = new ArrayList<>();
             boolean closeNow = false;
             while (true) {
