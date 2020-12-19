@@ -2,3 +2,7 @@
 [2020-12-18 20:24:19.345] [INFO   ] Main Starting FTCDevCommonIntelliJ 
 [2020-12-18 20:24:19.345] [INFO   ] Main Generating ftcdevcommon_1_1.jar 
 [2020-12-18 20:24:19.345] [INFO   ] Shutting down log 
+[2020-12-18 20:30:59.817] [INFO   ] Closing log and writing out the last 3 entries on the queue 
+[2020-12-18 20:30:59.855] [INFO   ] Main Starting FTCDevCommonIntelliJ 
+[2020-12-18 20:30:59.856] [INFO   ] Main Generating ftcdevcommon_1_1.jar 
+[2020-12-18 20:30:59.856] [INFO   ] Shutting down log 
