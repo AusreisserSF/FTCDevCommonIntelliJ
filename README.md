@@ -11,6 +11,3 @@ code - and so must be kept in sync - except
 for the subdirectories IntelliJ and Android,
 each of which contains platform-specific methods
 of getting the current working directory.
-
-The Android subdirectory also has three source
-files that are specific to UVC camera support.
