@@ -2,6 +2,8 @@ package org.firstinspires.ftc.ftcdevcommon;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -11,13 +13,12 @@ import java.util.concurrent.ExecutionException;
 
 public class CommonUtils {
 
-    //**TODO Requires Android minSdkVersion 26
-    //public static String getLocalDateTimeStamp(LocalDateTime pLocalDateTime) {
-    //    return pLocalDateTime.format(DateTimeFormatter.ofPattern("MMddHHmm'_'ssSSS"));
-    //}
+    // Requires Android minSdkVersion 26
+    public static String getLocalDateTimeStamp(LocalDateTime pLocalDateTime) {
+        return pLocalDateTime.format(DateTimeFormatter.ofPattern("MMddHHmm'_'ssSSS"));
+    }
 
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmm'_'ssSSS");
-
     public static String getDateTimeStamp(Date pDate) {
         return dateFormat.format(pDate);
     }

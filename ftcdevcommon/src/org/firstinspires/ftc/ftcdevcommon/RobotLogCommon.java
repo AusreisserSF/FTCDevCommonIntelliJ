@@ -104,6 +104,25 @@ public class RobotLogCommon {
     public static boolean logThisLevel(final String pLevel) {
         Level levelToCheck;
         switch (pLevel) {
+            /* Android
+            case "d": {
+                levelToCheck = Level.FINE;
+                break;
+            }
+            case "v": {
+                levelToCheck = Level.FINER;
+                break;
+            }
+            case "vv": {
+                levelToCheck = Level.FINEST;
+                break;
+            }
+            default: {
+                throw new AutonomousRobotException(TAG, "Invalid debug log option");
+            }
+            */
+
+            // IntelliJ Java 14 only
             case "d" -> levelToCheck = Level.FINE;
             case "v" -> levelToCheck = Level.FINER;
             case "vv" -> levelToCheck = Level.FINEST;
