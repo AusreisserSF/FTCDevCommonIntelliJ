@@ -9,11 +9,15 @@ public class Main {
         System.out.println("Starting FTCDevCommonIntelliJ");
         RobotLogCommon.i("Main", "Starting FTCDevCommonIntelliJ");
 
-        // Go into File -> Project Structure and rename the output directory and the
-        // Output layout to the next release level of the jar file.
+        //##!! FIRST Go into File -> Project Structure -> Artifacts and change the
+        // Name to the new version of the jar file. On the same screen change the
+        // Output directory to reflect the new version and check the box for
+        // Include in project build. Then right-click the actual name of the jar
+        // file in the Output layout below and select Rename to rename the output
+        // to the new version. Be sure to hit Enter on the new name before OK.
 
-        System.out.println("Generating ftcdevcommon_1_5.jar");
-        RobotLogCommon.i("Main", "Generating ftcdevcommon_1_5.jar");
+        System.out.println("Generating ftcdevcommon_1_6.jar");
+        RobotLogCommon.i("Main", "Generating ftcdevcommon_1_6.jar");
         RobotLogCommon.closeLog();
     }
 }

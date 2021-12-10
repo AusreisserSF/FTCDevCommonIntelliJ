@@ -41,7 +41,7 @@ public class RobotLogCommon {
             return;
 
         try {
-            logger = Logger.getLogger(RobotLogCommon.class.getName());
+            logger = Logger.getLogger(RobotLogCommon.class.getSimpleName());
 
             // System.setProperty("java.util.logging.config.file",
             // "Files/logging.properties");
@@ -87,11 +87,11 @@ public class RobotLogCommon {
         }
     }
 
-    public static void setMinimimLoggingLevel(final Level pLoggingLevel) {
+    public static void setMostDetailedLogLevel(final Level pLoggingLevel) {
         logger.setLevel(pLoggingLevel);
     }
 
-    public static Level getMinimumLoggingLevel() {
+    public static Level getMostDetailedLogLevel() {
         return logger.getLevel();
     }
 
@@ -127,8 +127,7 @@ public class RobotLogCommon {
         if (!loggerInitialized)
             throw new AutonomousLoggingException(TAG, "Logging subsystem is not initiaalized"); // desperation time
 
-        // Don't enqueue if the log entry is below the current minimum logging
-        // level.
+        // Don't enqueue if the log entry is more detailed than the current logging level.
         if (!logger.isLoggable(pLevel))
             return;
 
