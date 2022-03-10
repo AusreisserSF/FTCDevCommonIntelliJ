@@ -15,6 +15,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+//**TODO 03/09/2022 Bring up-to-date with Android. Check other source files also.
+
 //https://www.logicbig.com/tutorials/core-java-tutorial/logging/customizing-default-format.html
 public class RobotLogCommon {
 
