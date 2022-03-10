@@ -68,7 +68,7 @@ public class XPathAccess {
     public String getRequiredStringInRange(String pPath, List<String> pRangeList) throws XPathExpressionException {
         String text = getRequiredString(pPath);
         if (!pRangeList.contains(text))
-            throw new AutonomousRobotException(TAG, "Text value " + text + " is not in a valid value");
+            throw new AutonomousRobotException(TAG, "Text value " + text + " is not a valid value");
 
         return text;
     }
