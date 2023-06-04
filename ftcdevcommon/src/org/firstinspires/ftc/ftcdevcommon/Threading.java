@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 public class Threading {
 
     // See https://stackoverflow.com/questions/43764036/how-to-convert-the-code-to-use-completablefuture
-    // Use answer with 6 upvotes from Holger.
+    // Use answer from Holger on May 3, 2017 with 6 upvotes.
 
     //##!! 12/14/2021 Added the newSingleThreadExecutor below after getting
     // inconsistent results when attempting to run the drive train and the

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.ftcdevcommon;
 
-import org.firstinspires.ftc.ftcdevcommon.intellij.RobotLogCommon;
-import org.firstinspires.ftc.ftcdevcommon.intellij.WorkingDirectory;
+import org.firstinspires.ftc.ftcdevcommon.platform.intellij.RobotLogCommon;
+import org.firstinspires.ftc.ftcdevcommon.platform.intellij.WorkingDirectory;
 
 public class Main {
 
@@ -17,8 +17,8 @@ public class Main {
         // file in the Output layout below and select Rename to rename the output
         // to the new version. Be sure to hit Enter on the new name before OK.
 
-        System.out.println("Generating ftcdevcommon_2_0.jar");
-        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_0.jar");
+        System.out.println("Generating ftcdevcommon_2_2.jar");
+        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_2.jar");
         RobotLogCommon.closeLog();
     }
 }

@@ -1,10 +1,7 @@
-package org.firstinspires.ftc.ftcdevcommon.intellij;
+package org.firstinspires.ftc.ftcdevcommon.platform.intellij;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
 
 public class TimeStamp {
 

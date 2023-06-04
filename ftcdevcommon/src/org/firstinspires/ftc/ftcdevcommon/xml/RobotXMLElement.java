@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.ftcdevcommon;
+package org.firstinspires.ftc.ftcdevcommon.xml;
 
 import org.w3c.dom.Element;
 

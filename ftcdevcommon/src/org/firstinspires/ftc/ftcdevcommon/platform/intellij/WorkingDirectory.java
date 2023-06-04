@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.ftcdevcommon.intellij;
+package org.firstinspires.ftc.ftcdevcommon.platform.intellij;
 
 import org.firstinspires.ftc.ftcdevcommon.AutonomousRobotException;
 
@@ -14,7 +14,7 @@ public class WorkingDirectory {
 
     public static String getWorkingDirectory() {
         Path currentWorkingDirPath = Paths.get("");
-        String currentPath = currentWorkingDirPath.toAbsolutePath().toString() + File.separator + filesPath;
+        String currentPath = currentWorkingDirPath.toAbsolutePath() + File.separator + filesPath;
         if (!Files.exists(Paths.get(currentPath)))
             throw new AutonomousRobotException(TAG, "Could not open working directory " + currentPath);
 

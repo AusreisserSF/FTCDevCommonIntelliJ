@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.ftcdevcommon;
+package org.firstinspires.ftc.ftcdevcommon.xml;
 
 import javax.xml.xpath.*;
 
+import org.firstinspires.ftc.ftcdevcommon.AutonomousRobotException;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class XPathAccess {
 
     // Works for both elements and attributes. The element or attribute
     // must be present and its associated text must not be empty.
-    public String getRequiredString(String pPath) throws XPathExpressionException {
+    public String getRequiredText(String pPath) throws XPathExpressionException {
         // Crude but effective in our environment: if the path includes a '@'
         // consider it to be an XML attribute.
         String text;
@@ -48,7 +49,7 @@ public class XPathAccess {
 
     // If the requested text is not present, this method returns the default value.
     // Otherwise it returns the text of the element or attribute.
-    public String getString(String pPath, String pDefaultIfMissing) throws XPathExpressionException {
+    public String getText(String pPath, String pDefaultIfMissing) throws XPathExpressionException {
         // Crude but effective in our environment: if the path includes a '@'
         // consider it to be an XML attribute.
         String text;
@@ -65,8 +66,8 @@ public class XPathAccess {
 
     // Gets a text string from an element or attribute and checks it against a list
     // of valid values.
-    public String getRequiredStringInRange(String pPath, List<String> pRangeList) throws XPathExpressionException {
-        String text = getRequiredString(pPath);
+    public String getRequiredTextInRange(String pPath, List<String> pRangeList) throws XPathExpressionException {
+        String text = getRequiredText(pPath);
         if (!pRangeList.contains(text))
             throw new AutonomousRobotException(TAG, "Text value " + text + " is not a valid value");
 
@@ -75,8 +76,8 @@ public class XPathAccess {
 
     // Gets a text string from an element or attribute and checks it against a list
     // of valid values.
-    public String getStringInRange(String pPath, String pDefaultIfMissing, List<String> pRangeList) throws XPathExpressionException {
-        String text = getString(pPath, pDefaultIfMissing);
+    public String getTextInRange(String pPath, String pDefaultIfMissing, List<String> pRangeList) throws XPathExpressionException {
+        String text = getText(pPath, pDefaultIfMissing);
         if (text.equals(pDefaultIfMissing))
             return text;
 
@@ -98,14 +99,14 @@ public class XPathAccess {
 
     // Works with both attributes and elements.
     public double getRequiredDouble(String pPath) throws XPathExpressionException {
-        String text = getRequiredString(pPath);
+        String text = getRequiredText(pPath);
         return getDoubleFromText(text, pPath);
     }
 
     // Works with both attributes and elements.
     public double getDouble(String pPath, double pDefaultValue) throws XPathExpressionException {
         String defaultString = Double.toString(pDefaultValue);
-        String text = getString(pPath, defaultString);
+        String text = getText(pPath, defaultString);
         if (text.equals(defaultString))
             return pDefaultValue;
 
@@ -114,14 +115,14 @@ public class XPathAccess {
 
     // Works with both attributes and elements.
     public int getRequiredInt(String pPath) throws XPathExpressionException {
-        String text = getRequiredString(pPath);
+        String text = getRequiredText(pPath);
         return getIntFromText(text, pPath);
     }
 
     // Works with both attributes and elements.
     public int getInt(String pPath, int pDefaultValue) throws XPathExpressionException {
         String defaultString = Integer.toString(pDefaultValue);
-        String text = getString(pPath, defaultString);
+        String text = getText(pPath, defaultString);
         if (text.equals(defaultString))
             return pDefaultValue;
 
@@ -130,14 +131,14 @@ public class XPathAccess {
 
     // Works with both attributes and elements.
     public boolean getRequiredBoolean(String pPath) throws XPathExpressionException {
-        String text = getRequiredString(pPath);
+        String text = getRequiredText(pPath);
        return getBooleanFromText(text, pPath);
     }
 
     // Works with both attributes and elements.
     public boolean getBoolean(String pPath, boolean pDefaultValue) throws XPathExpressionException {
         String defaultString = Boolean.toString(pDefaultValue);
-        String text = getString(pPath, defaultString);
+        String text = getText(pPath, defaultString);
         if (text.equals(defaultString))
             return pDefaultValue;
 

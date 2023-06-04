@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.ftcdevcommon.intellij;
+package org.firstinspires.ftc.ftcdevcommon.platform.intellij;
 
 import org.firstinspires.ftc.ftcdevcommon.Pair;
 import org.firstinspires.ftc.ftcdevcommon.Threading;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -12,11 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 // Logging class that enqueues log records and writes them out in
 // the background to the standard Java logger.
@@ -56,7 +55,7 @@ import java.util.logging.SimpleFormatter;
 // disallows the enqueueing of log entries and the writing of records
 // to the log file.
 
-//## Ported from the FTC Freight Frenzy Android project on 3/10/2022.
+//## Synchronized with the FtcPowerPlayVisionPostSeason Android project on 6/4/2023.
 public class RobotLogCommon {
 
     private static final Level DEFAULT_LEVEL = Level.FINE;
@@ -70,7 +69,7 @@ public class RobotLogCommon {
 
     public enum LogIdentifier {AUTO_LOG, TELEOP_LOG, TEST_LOG, APP_LOG, NONE}
 
-    private static final EnumMap<LogIdentifier, String> logFileBaseNames = new EnumMap<LogIdentifier, String>(LogIdentifier.class) {{
+    private static final EnumMap<LogIdentifier, String> logFileBaseNames = new EnumMap<>(LogIdentifier.class) {{
         put(LogIdentifier.AUTO_LOG, "FTCAutoLog_");
         put(LogIdentifier.TELEOP_LOG, "FTCTeleOpLog_");
         put(LogIdentifier.TEST_LOG, "TestLog_");
@@ -176,6 +175,28 @@ public class RobotLogCommon {
         currentLogData.logLevel = pLogLevel;
     }
 
+    public static synchronized boolean isLoggable(String pLogLevel) {
+        if (currentLogIdentifier == LogIdentifier.NONE) {
+            System.out.println("Attempt to set log level when logging is disabled");
+            return false;
+        }
+
+        // Highest
+        if (pLogLevel.equals("i") && currentLogData.logger.isLoggable(Level.INFO))
+            return true;
+
+        if (pLogLevel.equals("c") && currentLogData.logger.isLoggable(Level.CONFIG))
+            return true;
+
+        if (pLogLevel.equals("d") && currentLogData.logger.isLoggable(Level.FINE))
+            return true;
+
+        if (pLogLevel.equals("v") && currentLogData.logger.isLoggable(Level.FINER))
+            return true;
+
+        return pLogLevel.equals("vv") && currentLogData.logger.isLoggable(Level.FINEST);
+    }
+
     public static synchronized Level getMostDetailedLogLevel() {
         if (currentLogIdentifier == LogIdentifier.NONE)
             return Level.OFF;
@@ -186,12 +207,13 @@ public class RobotLogCommon {
         enqueueLogEntry(Level.SEVERE, pTAG + " " + pLogMessage);
     }
 
-    public static void c(String pTAG, String pLogMessage) {
-        enqueueLogEntry(Level.CONFIG, pTAG + " " + pLogMessage);
-    }
-
+    // Highest
     public static void i(String pTAG, String pLogMessage) {
         enqueueLogEntry(Level.INFO, pTAG + " " + pLogMessage);
+    }
+
+    public static void c(String pTAG, String pLogMessage) {
+        enqueueLogEntry(Level.CONFIG, pTAG + " " + pLogMessage);
     }
 
     public static void d(String pTAG, String pLogMessage) {
@@ -260,12 +282,8 @@ public class RobotLogCommon {
             // After a clean shutdown we can remove all traces of the logger.
             System.out.println("Successfully closed logger " + currentLogIdentifier);
         } catch (Throwable t) {
-            // If the CompletableFuture throws any exception at all there's really
-            // nothing we can do about the underlying thread: from the Java documentation
-            // for CompletableFuture --
-            // "Since (unlike FutureTask) this class has no direct control over
-            // the computation that causes it to be completed, cancellation is
-            // treated as just another form of exceptional completion."
+            // Our Threading.launchAsync method ensures that shutdownNow is called on the
+            // executor in which the CompletableFuture is running.
             System.out.println("Exception during shutdown of logger " + currentLogIdentifier);
             System.out.println("Error " + t);
         } finally {
