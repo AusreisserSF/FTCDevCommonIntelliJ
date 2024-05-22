@@ -17,8 +17,8 @@ public class Main {
         // file in the Output layout below and select Rename to rename the output
         // to the new version. Be sure to hit Enter on the new name before OK.
 
-        System.out.println("Generating ftcdevcommon_2_2.jar");
-        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_2.jar");
+        System.out.println("Generating ftcdevcommon_2_3.jar");
+        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_3.jar");
         RobotLogCommon.closeLog();
     }
 }
