@@ -5,9 +5,9 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeStamp {
 
-    // IntelliJ supports LocalDateTime
+    // IntelliJ supports LocalDateTime; format to 2024-06-06_0817:43.759.
     public static String getLocalDateTimeStamp(LocalDateTime pLocalDateTime) {
-        return pLocalDateTime.format(DateTimeFormatter.ofPattern("MMddHHmm'_'ssSSS"));
+        return pLocalDateTime.format(DateTimeFormatter.ofPattern("yyyy'-'MM'-'dd'_'HHmm'-'ss'.'SSS"));
     }
 
 }
