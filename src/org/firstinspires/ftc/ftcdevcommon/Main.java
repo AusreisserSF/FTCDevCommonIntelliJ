@@ -12,8 +12,8 @@ public class Main {
 
         //##!! Follow the instructions in the README.
 
-        System.out.println("Generating ftcdevcommon_2_4.jar");
-        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_4.jar");
+        System.out.println("Generating ftcdevcommon_2_5.jar");
+        RobotLogCommon.i("Main", "Generating ftcdevcommon_2_5.jar");
         RobotLogCommon.closeLog();
     }
 }
