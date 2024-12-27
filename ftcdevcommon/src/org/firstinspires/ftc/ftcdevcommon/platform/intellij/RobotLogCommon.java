@@ -58,7 +58,26 @@ import java.util.logging.*;
 //## Synchronized with the FtcPowerPlayVisionPostSeason Android project on 6/4/2023.
 public class RobotLogCommon {
 
-    private static final Level DEFAULT_LEVEL = Level.FINE;
+    private static final String TAG = RobotLogCommon.class.getSimpleName();
+
+    // For ranking use the values from java.util.logging.Level.
+    public enum CommonLogLevel {
+        off(Level.OFF), e(Level.SEVERE), w(Level.WARNING),
+        i(Level.INFO), c(Level.CONFIG),
+        d(Level.FINE), v(Level.FINER), vv(Level.FINEST);
+
+        private final Level logLevel;
+
+        CommonLogLevel(Level pLogLevel) {
+            logLevel = pLogLevel;
+        }
+
+        Level getJavaLogLevel() {
+            return logLevel;
+        }
+    }
+
+    private static final CommonLogLevel DEFAULT_LEVEL = CommonLogLevel.d;
 
     public enum OpenStatus {
         // The logger was initialized with an id of NONE or there was
@@ -141,7 +160,7 @@ public class RobotLogCommon {
             });
 
             logger.addHandler(fileHandler);
-            logger.setLevel(DEFAULT_LEVEL);
+            logger.setLevel(DEFAULT_LEVEL.getJavaLogLevel());
 
             // Start a CompletableFuture for writing out the log.
             currentLogIdentifier = pIdentifier;
@@ -165,42 +184,24 @@ public class RobotLogCommon {
         return openStatus;
     }
 
-    public static synchronized void setMostDetailedLogLevel(final Level pLogLevel) {
+    public static synchronized void setMostDetailedLogLevel(final CommonLogLevel pLogLevel) {
         if (currentLogIdentifier == LogIdentifier.NONE) {
-            System.out.println("Attempt to set log level when logging is disabled");
+            System.out.println(TAG + " Attempt to set log level when logging is disabled");
             return;
         }
 
-        currentLogData.logger.setLevel(pLogLevel);
+        currentLogData.logger.setLevel(pLogLevel.getJavaLogLevel());
         currentLogData.logLevel = pLogLevel;
     }
 
-    public static synchronized boolean isLoggable(String pLogLevel) {
-        if (currentLogIdentifier == LogIdentifier.NONE) {
-            System.out.println("Attempt to set log level when logging is disabled");
-            return false;
-        }
-
-        // Highest
-        if (pLogLevel.equals("i") && currentLogData.logger.isLoggable(Level.INFO))
-            return true;
-
-        if (pLogLevel.equals("c") && currentLogData.logger.isLoggable(Level.CONFIG))
-            return true;
-
-        if (pLogLevel.equals("d") && currentLogData.logger.isLoggable(Level.FINE))
-            return true;
-
-        if (pLogLevel.equals("v") && currentLogData.logger.isLoggable(Level.FINER))
-            return true;
-
-        return pLogLevel.equals("vv") && currentLogData.logger.isLoggable(Level.FINEST);
+    public static synchronized boolean isLoggable(CommonLogLevel pLogLevel) {
+        return currentLogIdentifier != LogIdentifier.NONE && currentLogData.logger.isLoggable(pLogLevel.getJavaLogLevel());
     }
 
-    public static synchronized Level getMostDetailedLogLevel() {
+    public static synchronized CommonLogLevel getMostDetailedLogLevel() {
         if (currentLogIdentifier == LogIdentifier.NONE)
-            return Level.OFF;
-        return currentLogData.logger.getLevel();
+            return CommonLogLevel.off;
+        return currentLogData.logLevel;
     }
 
     public static void e(String pTAG, String pLogMessage) {
@@ -233,7 +234,7 @@ public class RobotLogCommon {
     // [during the drainTo] may result in elements being in neither, either or both
     // collections when the associated exception is thrown."
     private static synchronized void enqueueLogEntry(Level pLevel, String pLogString) {
-        if (currentLogIdentifier == LogIdentifier.NONE || currentLogData.logLevel == Level.OFF)
+        if (currentLogIdentifier == LogIdentifier.NONE || currentLogData.logLevel == CommonLogLevel.off)
             return; // nothing to do
 
         // Don't enqueue if the log entry is more detailed than the current logging level.
@@ -371,7 +372,7 @@ public class RobotLogCommon {
     private static class LogData {
         public final Logger logger;
         public final FileHandler fileHandler;
-        public Level logLevel = DEFAULT_LEVEL;
+        public CommonLogLevel logLevel = DEFAULT_LEVEL;
         public final LinkedBlockingQueue<Pair<Level, String>> logEntryQueue = new LinkedBlockingQueue<>();
 
         public CompletableFuture<Void> logWriterFuture;
