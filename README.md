@@ -21,8 +21,14 @@ Set the correct Output directory, e.g. ftcdevcommon_2_4_jar
 Make sure to check the box to "Include in project build"
 
 On the right-hand side under Available Elements double click on ftcdevcommon
-(click on ? for guidance)
+and then double-click on the line that appears below: ftcdevcommon compile
+output must then appear on the left.
 ** If you don't do this step then the jar file will not be built **
+(click on ? for guidance)
+
+In Main.java change the following two lines to reflect the new version of the jar.
+System.out.println("Generating ftcdevcommon_2_6.jar");
+RobotLogCommon.i("Main", "Generating ftcdevcommon_2_6.jar");
 
 Run the project. The new jar file should appear in this folder:
 C:\IdeaProjects\FTCDevCommonIntelliJ\out\artifacts.

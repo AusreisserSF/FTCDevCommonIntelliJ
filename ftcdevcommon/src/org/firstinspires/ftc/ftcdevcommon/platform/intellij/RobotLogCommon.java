@@ -79,6 +79,8 @@ public class RobotLogCommon {
 
     private static final CommonLogLevel DEFAULT_LEVEL = CommonLogLevel.d;
 
+    public enum LoggingMode {LOG_FILE_ONLY, MIRROR_TO_SYSOUT}
+
     public enum OpenStatus {
         // The logger was initialized with an id of NONE or there was
         // an error during initialization.
@@ -95,15 +97,24 @@ public class RobotLogCommon {
         put(LogIdentifier.APP_LOG, "AppLog_");
     }};
 
+    private static LoggingMode loggingMode;
     private static LogIdentifier currentLogIdentifier = LogIdentifier.NONE;
     private static LogData currentLogData;
+
+    // Overload that defaults to a logging mode of LOG_FILE_ONLY.
+    // The user chooses when to write to System.out.println.
+    public static synchronized OpenStatus initialize(LogIdentifier pIdentifier, String pLogDirPath) {
+    return initialize(pIdentifier, LoggingMode.LOG_FILE_ONLY, pLogDirPath);
+    }
 
     // Wanted to use a MemoryHandler to log to a buffer but found out here --
     // https://chromium.googlesource.com/android_tools/+/refs/heads/master/sdk/sources/android-25/java/util/logging/MemoryHandler.java
     // that push() is synchronous with the linked FileHandler. So we'll use a BlockingQueue instead.
-    public static synchronized OpenStatus initialize(LogIdentifier pIdentifier, String pLogDirPath) {
+    public static synchronized OpenStatus initialize(LogIdentifier pIdentifier,
+                                                     LoggingMode pLoggingMode, String pLogDirPath) {
 
         System.out.println("Request to initialize logger " + pIdentifier);
+        loggingMode = pLoggingMode;
 
         // We'll always create a new logger and a new log file so we don't have
         // to worry about the state of the current logger.
@@ -342,6 +353,8 @@ public class RobotLogCommon {
 
                         for (int i = 0; i < drainCount; i++, drainIndex++) {
                             currentLogData.logger.log(drain.get(drainIndex).first, drain.get(drainIndex).second);
+                            if (loggingMode == LoggingMode.MIRROR_TO_SYSOUT)
+                                System.out.println(drain.get(drainIndex).second);
                         }
                         break; // LogWriter will exit
                     }
@@ -361,6 +374,8 @@ public class RobotLogCommon {
                 // the log file have completed.
                 for (Pair<Level, String> oneLogEntry : drain) {
                     Objects.requireNonNull(currentLogData.logger).log(oneLogEntry.first, oneLogEntry.second);
+                    if (loggingMode == LoggingMode.MIRROR_TO_SYSOUT)
+                        System.out.println(oneLogEntry.second);
                 }
                 drain.clear();
             }
